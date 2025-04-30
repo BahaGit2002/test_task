@@ -1,61 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# To-Do List REST API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a simple REST API for managing a To-Do List, built with **PHP** and **Laravel**. The API provides CRUD operations for tasks, with data stored in a SQLite database. The project is designed to meet the requirements of a junior PHP developer test task.
 
-## About Laravel
+## Features
+- **CRUD Operations**:
+  - Create a task: `POST /tasks`
+  - List all tasks: `GET /tasks`
+  - View a single task: `GET /tasks/{id}`
+  - Update a task: `PUT /tasks/{id}`
+  - Delete a task: `DELETE /tasks/{id}`
+- Input validation for task fields (e.g., `title` is required).
+- SQLite database for lightweight storage.
+- Built with Laravel for routing, middleware, and Eloquent ORM.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
+- PHP >= 8.1
+- Composer
+- Laravel >= 10.x
+- SQLite (or MySQL, configurable)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/BahaGit2002/test_task.git
+   cd test_task
+   ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. **Install dependencies**:
+   ```bash
+   composer install
+   ```
 
-## Learning Laravel
+3. **Set up environment**:
+   - Copy the `.env.example` file to `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Configure the database connection in `.env` (SQLite is used by default):
+     ```env
+     DB_CONNECTION=sqlite
+     DB_DATABASE=/absolute/path/to/database.sqlite
+     ```
+   - Create the SQLite database file:
+     ```bash
+     touch database/database.sqlite
+     ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+4. **Run migrations**:
+   ```bash
+   php artisan migrate
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+5. **Generate application key**:
+   ```bash
+   php artisan key:generate
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+6. **Start the development server**:
+   ```bash
+   php artisan serve
+   ```
+   The API will be available at `http://localhost:8000`.
 
-## Laravel Sponsors
+## API Endpoints
+| Method | Endpoint          | Description                | Request Body (if applicable)                                          |
+|--------|-------------------|----------------------------|-----------------------------------------------------------------------|
+| POST   | `/tasks`          | Create a new task          | `{ "title": "string", "description": "string", "status": "boolean" }` |
+| GET    | `/tasks`          | List all tasks             | -                                                                     |
+| GET    | `/tasks/{id}`     | Get a specific task        | -                                                                     |
+| PUT    | `/tasks/{id}`     | Update a task              | `{ "title": "string", "description": "string", "status": "boolean" }`  |
+| DELETE | `/tasks/{id}`     | Delete a task              | -                                                                     |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Example Request
+**Create a Task**:
+```bash
+curl -X POST http://localhost:8000/api/tasks \
+-H "Content-Type: application/json" \
+-d '{"title":"Buy groceries","description":"Milk, eggs, bread","status": true}'
+```
 
-### Premium Partners
+**Response**:
+```json
+{
+  "id": 1,
+  "title": "Buy groceries",
+  "description": "Milk, eggs, bread",
+  "status": true,
+  "created_at": "2025-04-30T12:00:00.000000Z",
+  "updated_at": "2025-04-30T12:00:00.000000Z"
+}
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+## Validation
+- `title`: Required, string, minimum 1 character.
+- `description`: Optional, string.
+- `status`: Optional, boolean (e.g., true, false).
+
+Validation errors return a `422 Unprocessable Entity` response with details.
+
+## Testing the API
+You can test the API using tools like:
+- **Postman** or **Insomnia** for manual testing.
+- **cURL** for command-line testing.
+- Laravel's built-in testing suite (run `php artisan test` if tests are included).
+
+## Project Structure
+```
+test_task/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── TaskController.php  # API logic
+│   │   ├── Requests/
+│   │   │   └── TaskRequest.php    # Validation rules
+│   ├── Models/
+│   │   └── Task.php               # Eloquent model
+├── database/
+│   ├── migrations/
+│   │   └── ..._create_tasks_table.php  # Database schema
+│   └── database.sqlite            # SQLite database
+├── routes/
+│   └── api.php                    # API routes
+├── .env                           # Environment configuration
+└── README.md                      # This file
+```
+
+## Notes
+- The project uses SQLite for simplicity, but you can switch to MySQL by updating the `.env` file and running migrations.
+- Ensure the SQLite database file (`database.sqlite`) is writable by the application.
+- The repository is hosted at: [https://github.com/BahaGit2002/test_task](https://github.com/BahaGit2002/test_task).
 
 ## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Feel free to submit issues or pull requests to the repository if you have suggestions or improvements.
 
 ## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source and available under the [MIT License](LICENSE).
